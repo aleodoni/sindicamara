@@ -31,12 +31,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'smart_selects',
+    'importa',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -76,8 +79,15 @@ WSGI_APPLICATION = 'sindicamara.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'OPTIONS': {
+                'options': '-c search_path=main'
+        },
+        'NAME': 'sindicamara',
+        'USER': 'sindicamara',
+        'PASSWORD': 'nosferatu',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
