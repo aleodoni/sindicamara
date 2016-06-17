@@ -1,2 +1,3 @@
 *.pyc
 importa/*.pyc
+static/bower_components/*
