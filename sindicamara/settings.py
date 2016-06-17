@@ -15,6 +15,10 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), ".."),
+)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -25,12 +29,14 @@ SECRET_KEY = '5j*$zbp3-a+11)k89t49+m#jxg5*%34(cd@mfkz7n^f$pjgky$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Application definition
 
 INSTALLED_APPS = [
+    'pipeline',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'smart_selects',
+    'cidades',
+    'cadastro',
     'importa',
 ]
 
@@ -92,6 +100,51 @@ DATABASES = {
 }
 
 
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+
+STATIC_URL = '/static/'
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+
+PIPELINE = {
+    'STYLESHEETS': {
+        'master': {
+            'source_filenames': (
+              'bower_components/bootstrap/dist/css/bootstrap.css',
+              'bower_components/bootstrap-datepicker/css/datepicker.css',
+              'bower_components/datatables/media/css/dataTables.bootstrap.css',
+              'bower_components/jasny-bootstrap/dist/css/jasny-bootstrap.css',
+              'css/main.css',
+              'css/login.css',
+            ),
+            'output_filename': 'css/master.css',
+        },
+    },
+    'JAVASCRIPT': {
+        'master': {
+            'source_filenames': (
+              'bower_components/jquery/dist/jquery.js',
+              'bower_components/bootstrap/dist/js/bootstrap.js',
+              'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+              'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR.js',
+              'bower_components/datatables/media/js/jquery.dataTables.js',
+              'bower_components/datatables/media/js/dataTables.bootstrap.js',
+              'bower_components/jasny-bootstrap/dist/js/jasny-bootstrap.js',
+              'bower_components/autoNumeric/autoNumeric.js',
+              'bower_components/underscore/underscore.js',
+            ),
+            'output_filename': 'js/master.js',
+        }
+    }
+}
+
+
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
@@ -114,9 +167,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-BR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -126,6 +179,10 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+DECIMAL_SEPARATOR=','
+
+
+
+
