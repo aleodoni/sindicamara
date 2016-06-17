@@ -12,7 +12,7 @@ from django.shortcuts import redirect
 from django.utils.html import format_html
 from django.contrib.auth.decorators import login_required
 
-@login_required(login_url='/importa/login/')
+@login_required(login_url='/importa/loga/')
 def contribuicoes(request):
 	if request.method == 'POST':
 		form = UploadContribuicoesForm(request.POST, request.FILES)
@@ -24,7 +24,7 @@ def contribuicoes(request):
 	return render(request, 'contribuicoes.html', {'form': form})
 
 
-@login_required(login_url='/importa/login/')
+@login_required(login_url='/importa/loga/')
 def cadastro(request):
 	if request.method == 'POST':
 		form = UploadCadastroForm(request.POST, request.FILES)
@@ -36,12 +36,12 @@ def cadastro(request):
 	return render(request, 'cadastro.html', {'form': form})	
 
 
-@login_required(login_url='/importa/login/')
+@login_required(login_url='/importa/loga/')
 def index(request):
 	return render_to_response('index.html', context_instance=RequestContext(request))	
 
 
-def login(request):
+def loga(request):
 	next = request.GET.get('next')
 	return render_to_response('login.html', RequestContext(request, {'next': next}))	
 
@@ -60,13 +60,13 @@ def valida_usuario(request):
 				return render_to_response('index.html', context_instance=RequestContext(request))
 			else:
 				messages.add_message(request, messages.ERROR, "Usuário válido mas desebilitado.")
-				return redirect('/importa/login/?next=' + next)
+				return redirect('/importa/loga/?next=' + next)
 		else:
 			messages.add_message(request, messages.ERROR, "Usuário ou senha incorretos.")
-			return redirect('/importa/login/?next=' + next) 
+			return redirect('/importa/loga/?next=' + next) 
 
 
-@login_required(login_url='/core/usuario/loga/')
+@login_required(login_url='/importa/loga/')
 def sair(request):
 	logout(request)
-	return HttpResponseRedirect('/importa/login/')			
+	return HttpResponseRedirect('/importa/loga/')			

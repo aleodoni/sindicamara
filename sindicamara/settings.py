@@ -36,14 +36,15 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Application definition
 
 INSTALLED_APPS = [
-    'pipeline',
-    'crispy_forms',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pipeline',
+    'crispy_forms',
     'smart_selects',
     'cidades',
     'cadastro',

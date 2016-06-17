@@ -10,6 +10,7 @@ urlpatterns = [
 	url(r'^cadastro/$', views.cadastro, name='cadastro'),
 	url(r'^contribuicoes/$', views.contribuicoes, name='contribuicoes'),
 
-	url(r'^login/$', views.login, name='login'),
+	url(r'^loga/$', views.loga, name='loga'),
 	url(r'^valida-usuario/$', views.valida_usuario, name='valida-usuario'),
+	url(r'^sair/$', views.sair, name='sair'),
 ]
