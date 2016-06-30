@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Inclusão de Filiado{% endblock %}
+
+{% block content %}
+
+<form action="" method="post" id="formulario">
+	{% crispy form %}
+
+	<div class="col-md-12 row">
+		<div class="col-md-6"> 
+			<div id="div_id_estado" class="form-group"> 
+				<label for="id_estado" class="control-label requiredField">Estado</label>
+				<div class="controls "> 
+					<select class="select form-control" id="id_estado" name="estado">
+						<option value="">------------------------------</option>
+					</select> 
+				</div> 
+			</div>
+		</div>
+		<div class="col-md-6"> 
+			<div id="div_id_cidade" class="form-group"> 
+				<label for="id_cidade" class="control-label requiredField">Cidade</label>
+				<div class="controls "> 
+					<select class="select form-control" id="id_cidade" name="cidade">
+						<option value="">------------------------------</option>
+					</select> 
+				</div> 
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-12 row"> 
+		<div class="col-md-6"> 
+			<div class="form-group"> 
+				<div class="controls "> <input type="submit" name="save" value="Salvar" class="btn btn-primary" id="submit-id-save"/> </div>
+			</div>
+
+		</div>
+	</div>
+
+</form>
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script>
+	$(document).ready(function () {
+		$('.dateinput').datepicker({
+			format: "dd/mm/yyyy",
+			language: "pt-BR",
+			todayHighlight: true,
+			clearBtn: true,
+			autoclose: true,
+			orientation: "bottom left",
+		});
+
+		$('.dateinput').inputmask({
+      		mask: '99/99/9999'
+    	})
+
+    	$('#id_cep').inputmask({
+      		mask: '99.999-999'
+    	})
+
+    	$('#id_cpf').inputmask({
+      		mask: '999.999.999-99'
+    	})
+
+    	$('#id_rg').inputmask({
+      		mask: '9.999.999-9'
+    	})
+
+    	$('#id_telefone').inputmask({
+      		mask: '9999-9999'
+    	})
+
+    	$('#formulario').submit(function() {
+    		$('#id_cep').val($('#id_cep').val().replace('.', '').replace('-',''));
+    		$('#id_cpf').val($('#id_cpf').val().replace('.', '').replace('-',''));
+    		$('#id_rg').val($('#id_rg').val().replace('.', '').replace('-',''));
+    		$('#id_telefone').val($('#id_telefone').val().replace('.', '').replace('-',''));
+    	})
+
+    	carregaEstados();
+
+    	$('#id_estado').on('change', function() {
+    		carregaCidades();
+    	})
+	});
+
+	function carregaEstados() {
+		request_url = '/cidades/estados/';
+
+		$.ajax({
+      		url: request_url,
+      		type: 'GET',
+      		accepts: 'application/json',
+      		dataType: 'json',
+      		success: function(result){
+      			var toAppend = '';
+      			$.each(result, function(index, element) {
+      				if (element.ID == {{form.estado.value}})
+      					toAppend += '<option selected="selected" value="' + element.ID + '">' + element.Nome + '</option>';
+      				else
+      					toAppend += '<option value="' + element.ID + '">' + element.Nome + '</option>';
+      			});
+      			$('#id_estado').append(toAppend);
+      			carregaCidades();
+      		},
+      		error: function(xhr, status, error) {
+        		alert('Erro ao carregar Estados');
+            	alert(xhr);
+            	alert(status);
+            	alert(error);
+      		}
+    	})
+    }
+
+    function carregaCidades() {
+    	$('#id_cidade').children().remove().end().append('<option selected value="">------------------------------</option>') ;
+
+    	if ($('#id_estado option:selected').val() != '') {
+    		request_url = '/cidades/cidades/' + $('#id_estado option:selected').val();
+			$.ajax({
+	      		url: request_url,
+      			type: 'GET',
+      			accepts: 'application/json',
+      			dataType: 'json',
+      			success: function(result){
+	      			var toAppend = '';
+      				$.each(result, function(index, element) {
+	      				if (element.ID == {{form.cidade.value}})
+      						toAppend += '<option selected="selected" value="' + element.ID + '">' + element.Nome + '</option>';
+      					else
+	      					toAppend += '<option value="' + element.ID + '">' + element.Nome + '</option>';
+      				});
+      				$('#id_cidade').append(toAppend);
+      			},
+      			error: function(xhr, status, error) {
+	        		alert('Erro ao carregar Cidades');
+            		alert(xhr);
+            		alert(status);
+            		alert(error);
+      			}
+    		})	
+    	}
+    }
+
+</script>
+
+{% endblock %}

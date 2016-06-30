@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Exclusão de Filiado{% endblock %}
+
+{% block content %}
+
+<form action="" method="post" id="formulario">
+	{% csrf_token %}
+	<h3>Tem certeza que deseja excluir o filiado : <span class="label label-danger">{{ object.matricula }} - {{ object.nome }}</span></h3>
+	<button type="button" class="btn btn-secondary" onclick="javascript:nao();">Não</button>
+	<button type="button" class="btn btn-danger" onclick="javascript:sim();">Sim</button>
+</form>
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+	<script>
+		function nao() {
+			$(location).attr('href','/cadastro/filiado/pesquisa');
+		}
+
+		function sim() {
+			$('#formulario').submit();
+		}
+	</script>
+
+{% endblock %}

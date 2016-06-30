@@ -12,9 +12,17 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+def local_path(path):
+    return os.path.join(os.path.dirname(__file__), path)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), ".."),
+)
+
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -25,20 +33,25 @@ SECRET_KEY = '5j*$zbp3-a+11)k89t49+m#jxg5*%34(cd@mfkz7n^f$pjgky$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Application definition
 
 INSTALLED_APPS = [
-    'crispy_forms',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pipeline',
+    'crispy_forms',
     'smart_selects',
+    'cidades',
+    'cadastro',
     'importa',
 ]
 
@@ -58,7 +71,9 @@ ROOT_URLCONF = 'sindicamara.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            PROJECT_PATH + '/cadastro/templates/',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,7 +87,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sindicamara.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
@@ -88,6 +102,61 @@ DATABASES = {
         'PASSWORD': 'nosferatu',
         'HOST': '127.0.0.1',
         'PORT': '5432',
+    }
+}
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+
+STATIC_ROOT = 'cadastro/static/'
+
+STATIC_URL = '/cadastro/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'sindicamara/css'),
+    os.path.join(os.path.dirname(__file__), 'bower_components'),
+)
+
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "pipeline.finders.PipelineFinder",
+    #"pipeline.finders.CachedFileFinder",
+)
+
+PIPELINE = {
+    'PIPELINE_ENABLED': True,
+    'JS_COMPRESSOR': None,
+    'CSS_COMPRESSOR': None,
+    'STYLESHEETS': {
+        'master': {
+            'source_filenames': (
+              'bootstrap/dist/css/bootstrap.css',
+              'bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
+              'datatables/media/css/dataTables.bootstrap.css',
+              'jasny-bootstrap/dist/css/jasny-bootstrap.css',
+              'bootstrap-fileinput/css/fileinput.css',
+              'main.css',
+              'login.css',
+            ),
+            'output_filename': 'css/master.css',
+        },
+    },
+    'JAVASCRIPT': {
+        'master': {
+            'source_filenames': (
+              'jquery/dist/jquery.js',
+              'bootstrap/dist/js/bootstrap.js',
+              'bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+              'bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js',
+              'datatables/media/js/jquery.dataTables.js',
+              'datatables/media/js/dataTables.bootstrap.js',
+              'jasny-bootstrap/dist/js/jasny-bootstrap.js',
+              'bootstrap-fileinput/js/fileinput.js',
+              'autoNumeric/autoNumeric.js',
+              'underscore/underscore.js',
+            ),
+            'output_filename': 'js/master.js',
+        }
     }
 }
 
@@ -114,9 +183,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-BR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -124,8 +193,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+DECIMAL_SEPARATOR=','
+
+#IPELINE_YUI_BINARY = '/usr/bin/yui-compressor'
+#PIPELINE_LESS_BINARY = '/usr/bin/lessc'
