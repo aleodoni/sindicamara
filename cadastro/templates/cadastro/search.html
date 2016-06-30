@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Pesquisa de Filiado{% endblock %}
+
+{% block content %}
+
+<form action="" method="get" id="formulario">
+	{% crispy form %}
+</form>
+
+<div class="col-md-12">
+<div class="table-responsive">
+<table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+	<thead>
+		<tr>
+			<th>Matrícula</th>
+			<th>Nome</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for item in filiados %}
+			<tr>
+				<td><a href="altera/{{ item.id }}">{{ item.matricula_formatada }}</a></td>
+				<td><a href="altera/{{ item.id }}">{{ item.nome }}</a></td>
+				<td class="text-center"><a href="deleta/{{ item.id }}"><span class="glyphicon glyphicon-trash text-danger"></span></a></td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div></div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+<script>
+	$(document).ready(function() {
+    	$('#tabela').DataTable({
+    		"bFilter": false,
+    		"bLengthChange": false
+    	});
+
+    	$('input, select').keypress(function(event) {
+    		if(event.keyCode === 13){
+				$('#formulario').submit();
+			}
+		});
+
+	} );
+
+	function imprime() {
+		alert('Não implementado');
+	}
+
+	function pesquisa() {
+		$('#formulario').submit();
+	}
+
+	function novo() {
+		$(location).attr('href','/cadastro/filiado/novo');
+	}
+
+</script>
+
+{% endblock %}

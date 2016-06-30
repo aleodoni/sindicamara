@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -38,9 +39,13 @@ class Filiado(models.Model):
 	setor = models.ForeignKey('Setor', blank=True, null=True)
 	cargo = models.ForeignKey('Cargo', blank=True, null=True)
 	cidade = models.IntegerField(blank=True, null=True)
+	estado = models.IntegerField(blank=True, null=True)
 
 	def __str__(self):
 		return self.nome
+
+	def matricula_formatada(self):
+		return self.matricula.zfill(4)
 
 
 @python_2_unicode_compatible

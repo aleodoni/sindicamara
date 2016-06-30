@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+def local_path(path):
+    return os.path.join(os.path.dirname(__file__), path)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -19,6 +22,7 @@ PROJECT_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), ".."),
 )
 
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -67,7 +71,9 @@ ROOT_URLCONF = 'sindicamara.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            PROJECT_PATH + '/cadastro/templates/',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,7 +87,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sindicamara.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
@@ -100,29 +105,38 @@ DATABASES = {
     }
 }
 
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
 
-STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+STATIC_ROOT = 'cadastro/static/'
 
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+STATIC_URL = '/cadastro/static/'
 
-STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'sindicamara/css'),
+    os.path.join(os.path.dirname(__file__), 'bower_components'),
+)
 
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'pipeline.finders.PipelineFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "pipeline.finders.PipelineFinder",
+    #"pipeline.finders.CachedFileFinder",
 )
 
 PIPELINE = {
+    'PIPELINE_ENABLED': True,
+    'JS_COMPRESSOR': None,
+    'CSS_COMPRESSOR': None,
     'STYLESHEETS': {
         'master': {
             'source_filenames': (
-              'bower_components/bootstrap/dist/css/bootstrap.css',
-              'bower_components/bootstrap-datepicker/css/datepicker.css',
-              'bower_components/datatables/media/css/dataTables.bootstrap.css',
-              'bower_components/jasny-bootstrap/dist/css/jasny-bootstrap.css',
-              'css/main.css',
-              'css/login.css',
+              'bootstrap/dist/css/bootstrap.css',
+              'bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
+              'datatables/media/css/dataTables.bootstrap.css',
+              'jasny-bootstrap/dist/css/jasny-bootstrap.css',
+              'bootstrap-fileinput/css/fileinput.css',
+              'main.css',
+              'login.css',
             ),
             'output_filename': 'css/master.css',
         },
@@ -130,15 +144,16 @@ PIPELINE = {
     'JAVASCRIPT': {
         'master': {
             'source_filenames': (
-              'bower_components/jquery/dist/jquery.js',
-              'bower_components/bootstrap/dist/js/bootstrap.js',
-              'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
-              'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR.js',
-              'bower_components/datatables/media/js/jquery.dataTables.js',
-              'bower_components/datatables/media/js/dataTables.bootstrap.js',
-              'bower_components/jasny-bootstrap/dist/js/jasny-bootstrap.js',
-              'bower_components/autoNumeric/autoNumeric.js',
-              'bower_components/underscore/underscore.js',
+              'jquery/dist/jquery.js',
+              'bootstrap/dist/js/bootstrap.js',
+              'bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+              'bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js',
+              'datatables/media/js/jquery.dataTables.js',
+              'datatables/media/js/dataTables.bootstrap.js',
+              'jasny-bootstrap/dist/js/jasny-bootstrap.js',
+              'bootstrap-fileinput/js/fileinput.js',
+              'autoNumeric/autoNumeric.js',
+              'underscore/underscore.js',
             ),
             'output_filename': 'js/master.js',
         }
@@ -178,12 +193,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 DECIMAL_SEPARATOR=','
 
-
-
-
+#IPELINE_YUI_BINARY = '/usr/bin/yui-compressor'
+#PIPELINE_LESS_BINARY = '/usr/bin/lessc'
